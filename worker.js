@@ -1,28 +1,24 @@
 
 let browserInstance = []
-let counter = 0
 
 onconnect = (e) => {
-    debugger
     const port = e.ports[0];
     browserInstance.push(port)
-    console.log('--on connect method of the worker js--', port)
-    console.log('--worker js onmessage outside clicked--: ')
-
+    // console.log('--on connect method of the worker js--', port)
+    // console.log('--worker js onmessage outside clicked--: ')
+    
     port.onmessage = ({data}) => {
-        console.log('---inside the worker js file---', data)
+        // debugger
+        console.log('---inside the worker js file onmessage---', data)
         // switch(data.mutation) {
-        //     case mutations.ADD:
+        //     case 'RESTART':
         //         console.log('--inside the worker js switch ADD --', data)
-        //         port.postMessage({ mutation: 'RESTART', value: data.value });
-        //         data.value
+        //         postMessage({ mutation: 'RESTART', value: data.value });
         //         break
         //     default:
-        //         data.value
-
+        //         console.log('---inside the default switch case of worker js--')
         // }
-        console.log('--worker js onmessage clicked--: ')
-        // postMessage({ ...data })
+        // port.postMessage(data)
        
     };
 };
@@ -30,6 +26,6 @@ onconnect = (e) => {
 function postMessage(data) {
     console.log('---inside the post message fun or worker js file')
     browserInstance.map(instance => {
-        instance.postMessage(data)
+        instance.postMessage({data})
     })
 }
