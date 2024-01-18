@@ -86,7 +86,7 @@
 		window.onload = function () {
 			var domRef = document.getElementById('shared-worker-poc')
 			if (domRef) {
-				['click'].forEach(evt => {
+				['click', 'touchstart', 'mousemove'].forEach(evt => {
 					domRef.addEventListener(evt, resetIdleTimeout, false)
 				});
 			}
