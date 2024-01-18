@@ -35,41 +35,38 @@
 		const mutations = {
 			RESTART: 'RESTART'
 		}
-		// let sharedWorkerChannel;
+		let sharedWorkerChannel;
 
-		// if (!sharedWorkerChannel) {
-		const sharedWorkerChannel = new SharedWorker('worker.js')
-			// console.log('--sharedWorkerChannel instance--', sharedWorkerChannel)
-		// }
-		// sharedWorkerChannel.port.onmessage = handleNewMessage
+		if (!sharedWorkerChannel) {
+			sharedWorkerChannel = new SharedWorker('worker.js')
+		}
+		sharedWorkerChannel.port.onmessage = handleNewMessage
 
-		// function handleNewMessage ({ data }) {
-		// 	// debugger
-		// 	console.log('- handle message func of onmessage index.js-', data) ;
-		// 	switch(data.mutation) {
-		// 		case mutations.RESTART:
-		// 			resetIdleTimeout(false)
-		// 			break
-		// 		default:
-		// 			resetIdleTimeout(false)
-		// 	}
+		function handleNewMessage ({ data }) {
+			// console.log('- handle message func of onmessage index.js-', data) ;
+			switch(data.mutation) {
+				case mutations.RESTART:
+					resetIdleTimeout(false)
+					break
+				default:
+					resetIdleTimeout(false)
+			}
 			
-		// }
+		}
 
-		// function postMessage(mutation, value) {
-		// 	console.log(mutation, '--inside the post Message func--', value)
-		// 	sharedWorkerChannel.port.postMessage({ mutation, value })
-		// }
+		function postMessage(mutation, value) {
+			// console.log(mutation, '--inside the post Message func--', value)
+			sharedWorkerChannel.port.postMessage({ mutation, value })
+		}
 
 		const idleDurationSec = 300;
 
 		let idleTimeout;
 		const resetIdleTimeout = (isCallPostMessage = true) => {
-			// console.log('---inside the reset idle timerout func')
-			// if (isCallPostMessage) {
-			// 	console.log('--post message called from the reset idle timer func--')
-			// 	postMessage('RESTART', idleDurationSec)
-			// }
+			if (isCallPostMessage) {
+				// console.log('--post message called from the reset idle timer func--')
+				postMessage(mutations.RESTART, idleDurationSec)
+			}
 			let idleDurationVar = idleDurationSec
 			if (idleTimeout) {
 				clearInterval(idleTimeout)
@@ -88,7 +85,6 @@
 
 		window.onload = function () {
 			var domRef = document.getElementById('shared-worker-poc')
-			// console.log('---dom reference--', domRef)
 			if (domRef) {
 				['click'].forEach(evt => {
 					domRef.addEventListener(evt, resetIdleTimeout, false)
