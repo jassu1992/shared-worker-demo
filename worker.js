@@ -12,14 +12,12 @@ onconnect = (e) => {
                 break
             default:
                 postMessage({mutation: 'STOP', value: 1})
-        }
-       
+        }       
     };
 };
 
-function postMessage({mutation, value}) {
-    // console.log('---inside the post message fun or worker js file')
+function postMessage(data) {
     browserInstance.map(instance => {
-        instance.postMessage({mutation, value})
+        instance.postMessage(data)
     })
 }
